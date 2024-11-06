@@ -1,0 +1,27 @@
+<idea-plugin>
+    <id>com.dimbo4ka.isrpo_plugin</id>
+    <name>isrpo_plugin</name>
+    <version>1.0.0</version>
+    <vendor>Plotnikov Dmitriy</vendor>
+    <description>
+        Plugin allows you to search for selected text on Google.
+    </description>
+
+    <idea-version since-build="211" until-build="231.*" />
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <actions>
+        <action
+                id="Search"
+                class="Search"
+                text="Search in Google"
+                description="Search selected text in Google">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt S"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="meta alt S"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+</idea-plugin>
