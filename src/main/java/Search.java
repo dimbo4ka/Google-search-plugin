@@ -1,42 +1,44 @@
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.ui.Messages;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class Main extends AnAction {
+public class Search extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent event) {
         Editor editor = event.getData(CommonDataKeys.EDITOR);
+        String selectedText = null;
+
         if (editor != null) {
-            SelectionModel selectionModel = editor.getSelectionModel();
-            String selectedText = selectionModel.getSelectedText();
-
-            if (selectedText != null && !selectedText.isEmpty()) {
-                String query = URLEncoder.encode(selectedText, StandardCharsets.UTF_8);
-                String url = "https://www.google.com/search?q=" + query;
-
-                if (Desktop.isDesktopSupported()) {
-                    try {
-                        Desktop.getDesktop().browse(URI.create(url));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            selectedText = editor.getSelectionModel().getSelectedText();
         }
+
+        if (editor == null || selectedText == null || selectedText.isEmpty()) {
+            selectedText = "python memes for true boys";
+        }
+
+        String encodedUrl;
+        try {
+            encodedUrl = URLEncoder.encode(selectedText, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException error) {
+            Messages.showErrorDialog("Url encoding error: " + error.getMessage(), "error");
+            return;
+        }
+
+        String url = String.format("https://www.google.com/search?q=%s", encodedUrl);
+        Messages.showMessageDialog("Search in google:\n" + url, "Googling", Messages.getInformationIcon());
+
+        BrowserUtil.browse(url);
     }
 
     @Override
-    public void update(AnActionEvent event) {
-        Editor editor = event.getData(CommonDataKeys.EDITOR);
-        boolean isTextSelected = editor != null && editor.getSelectionModel().hasSelection();
-        event.getPresentation().setEnabledAndVisible(isTextSelected);
+    public boolean isDumbAware() {
+        return true;
     }
 }
