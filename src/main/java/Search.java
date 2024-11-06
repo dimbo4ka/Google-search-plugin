@@ -32,7 +32,7 @@ public class Search extends AnAction {
         }
 
         String url = String.format("https://www.google.com/search?q=%s", encodedUrl);
-        Messages.showMessageDialog("Search in google:\n" + url, "Googling", Messages.getInformationIcon());
+        Messages.showMessageDialog("Search in Google:\n" + url, "Googling", Messages.getInformationIcon());
 
         BrowserUtil.browse(url);
     }
